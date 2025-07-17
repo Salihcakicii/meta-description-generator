@@ -1,58 +1,117 @@
-const descriptionInput = document.getElementById("descriptionInput");
-const charCount = document.getElementById("charCount");
-const pixelWidth = document.getElementById("pixelWidth");
-const feedback = document.getElementById("feedback");
-const keywordInput = document.getElementById("keywordInput");
-const keywordCheck = document.getElementById("keywordCheck");
+const keywordsInput = document.getElementById("keywordsInput");
+const brandInput = document.getElementById("brandInput");
+const generateBtn = document.getElementById("generateBtn");
+const descriptionOutput = document.getElementById("descriptionOutput");
+const lengthFeedback = document.getElementById("lengthFeedback");
+const serpDescription = document.getElementById("serpDescription");
+const copyBtn = document.getElementById("copyBtn");
+const downloadBtn = document.getElementById("downloadBtn");
 const languageSelect = document.getElementById("languageSelect");
 
-const pixelPerChar = 7; // Meta description piksel ortalaması
+// Çoklu dil destek metinleri
+const texts = {
+  tr: {
+    generateBtn: "Meta Açıklama Oluştur",
+    emptyKeywords: "Lütfen anahtar kelimeleri girin.",
+    lengthIdeal: "✅ Uzunluk ideal (120-160 karakter).",
+    lengthShort: "⚠️ Meta açıklama çok kısa (<120 karakter).",
+    lengthLong: "⚠️ Meta açıklama çok uzun (>160 karakter).",
+    copySuccess: "Meta açıklama kopyalandı!",
+    copyFail: "Kopyalama başarısız oldu!",
+    downloadName: "meta_description.txt",
+  },
+  en: {
+    generateBtn: "Generate Meta Description",
+    emptyKeywords: "Please enter keywords.",
+    lengthIdeal: "✅ Length is ideal (120-160 characters).",
+    lengthShort: "⚠️ Meta description is too short (<120 characters).",
+    lengthLong: "⚠️ Meta description is too long (>160 characters).",
+    copySuccess: "Meta description copied!",
+    copyFail: "Copy failed!",
+    downloadName: "meta_description.txt",
+  },
+};
 
-descriptionInput.addEventListener("input", updateAnalysis);
-keywordInput.addEventListener("input", updateAnalysis);
-
-function updateAnalysis() {
-  const text = descriptionInput.value.trim();
-  const keyword = keywordInput.value.trim().toLowerCase();
+function updateLanguage() {
   const lang = languageSelect.value;
+  generateBtn.textContent = texts[lang].generateBtn;
+  lengthFeedback.textContent = "";
+  descriptionOutput.value = "";
+  serpDescription.textContent = lang === "tr" ? "Meta açıklama burada gösterilecek..." : "Meta description will be shown here...";
+}
+languageSelect.addEventListener("change", updateLanguage);
+updateLanguage();
 
-  const length = text.length;
-  const pixels = Math.round(length * pixelPerChar);
+function cleanInput(text) {
+  // Küçük harfe çevir ve ekstra boşlukları temizle
+  return text.toLowerCase().replace(/\s+/g, " ").trim();
+}
 
-  charCount.textContent = `${length} karakter`;
-  pixelWidth.textContent = `${pixels} piksel`;
-
-  if (!text) {
-    feedback.textContent = "";
-    keywordCheck.textContent = "";
+function generateMetaDescription() {
+  const lang = languageSelect.value;
+  let keywordsRaw = keywordsInput.value.trim();
+  if (!keywordsRaw) {
+    alert(texts[lang].emptyKeywords);
     return;
   }
 
-  // Google meta description pixel sınırları: ideal 920-960 arası, max 1000 piksel civarı
-  if (pixels < 600) {
-    feedback.textContent = lang === "tr" ? "⚠️ Meta açıklama çok kısa." : "⚠️ Meta description is too short.";
-    feedback.style.color = "orange";
-  } else if (pixels <= 960) {
-    feedback.textContent = lang === "tr" ? "✅ Meta açıklama ideal uzunlukta." : "✅ Meta description length is ideal.";
-    feedback.style.color = "green";
-  } else if (pixels <= 1000) {
-    feedback.textContent = lang === "tr" ? "ℹ️ Meta açıklama biraz uzun ama kabul edilebilir." : "ℹ️ Meta description is a bit long but acceptable.";
-    feedback.style.color = "#007bff";
+  let keywords = keywordsRaw
+    .split(/[\n,]+/)
+    .map(k => cleanInput(k))
+    .filter(k => k.length > 0);
+
+  // Basit özgün meta açıklama oluşturma:
+  // "Anahtar kelimelerle ilgili kaliteli içerik sunuyoruz."
+  // Sonra marka adı varsa ekle
+  let baseDescription = "";
+  if (lang === "tr") {
+    baseDescription = `En iyi ${keywords.join(", ")} ile kaliteli ve güvenilir içerik sunuyoruz.`;
   } else {
-    feedback.textContent = lang === "tr" ? "❌ Meta açıklama çok uzun, kesilebilir." : "❌ Meta description is too long, may be truncated.";
-    feedback.style.color = "red";
+    baseDescription = `We provide quality and reliable content with the best ${keywords.join(", ")}.`;
   }
 
-  // Anahtar kelime kontrolü
-  if (keyword) {
-    if (text.toLowerCase().includes(keyword)) {
-      keywordCheck.textContent = lang === "tr" ? "✅ Anahtar kelime meta açıklamada var." : "✅ Keyword is present in meta description.";
-      keywordCheck.style.color = "green";
-    } else {
-      keywordCheck.textContent = lang === "tr" ? "❌ Anahtar kelime meta açıklamada yok." : "❌ Keyword is not present in meta description.";
-      keywordCheck.style.color = "red";
-    }
+  const brand = brandInput.value.trim();
+  let fullDescription = brand ? `${baseDescription} | ${brand}` : baseDescription;
+
+  descriptionOutput.value = fullDescription;
+  serpDescription.textContent = fullDescription;
+
+  checkLength(fullDescription);
+}
+
+function checkLength(text) {
+  const lang = languageSelect.value;
+  const len = text.length;
+  if (len < 120) {
+    lengthFeedback.textContent = texts[lang].lengthShort;
+    lengthFeedback.style.color = "orange";
+  } else if (len <= 160) {
+    lengthFeedback.textContent = texts[lang].lengthIdeal;
+    lengthFeedback.style.color = "green";
   } else {
-    keywordCheck.textContent = "";
+    lengthFeedback.textContent = texts[lang].lengthLong;
+    lengthFeedback.style.color = "red";
   }
 }
+
+generateBtn.addEventListener("click", generateMetaDescription);
+
+copyBtn.addEventListener("click", () => {
+  const lang = languageSelect.value;
+  navigator.clipboard.writeText(descriptionOutput.value).then(() => {
+    alert(texts[lang].copySuccess);
+  }).catch(() => {
+    alert(texts[lang].copyFail);
+  });
+});
+
+downloadBtn.addEventListener("click", () => {
+  const lang = languageSelect.value;
+  const blob = new Blob([descriptionOutput.value], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = texts[lang].downloadName;
+  a.click();
+  URL.revokeObjectURL(url);
+});
