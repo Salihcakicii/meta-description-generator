@@ -1,53 +1,97 @@
-document.getElementById("generateBtn").addEventListener("click", function () {
-  const content = document.getElementById("content").value.trim();
-  const keywords = document.getElementById("keywords").value.trim().toLowerCase().split(",");
-  const resultEl = document.getElementById("result");
-  const charCountEl = document.getElementById("charCount");
-  const keywordCoverageEl = document.getElementById("keywordCoverage");
-  const keywordStatusEl = document.getElementById("keywordStatus");
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f7fa;
+  margin: 0;
+  padding: 0;
+}
 
-  if (content.length === 0 || keywords.length === 0) {
-    resultEl.textContent = "Lütfen içerik ve anahtar kelime girin.";
-    return;
-  }
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px 30px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
 
-  // Meta açıklama oluştur (kırpılmış)
-  let meta = content.substring(0, 160);
-  if (meta.length > 157) {
-    meta = meta.substring(0, 157) + "...";
-  }
+h1, h2 {
+  text-align: center;
+  color: #1e2a38;
+}
 
-  resultEl.textContent = meta;
+.input-group {
+  margin-bottom: 20px;
+}
 
-  // Karakter sayısı
-  charCountEl.textContent = meta.length;
+label {
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 6px;
+}
 
-  // Anahtar kelime yoğunluğu hesapla
-  let count = 0;
-  let totalKeywords = 0;
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border 0.3s ease;
+}
 
-  keywords.forEach((kw) => {
-    const trimmed = kw.trim();
-    if (trimmed.length === 0) return;
-    totalKeywords++;
+input[type="text"]:focus,
+textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
 
-    const regex = new RegExp(`\\b${trimmed}\\b`, "gi");
-    const matches = meta.match(regex);
-    if (matches) count += matches.length;
-  });
+button {
+  display: block;
+  width: 100%;
+  background-color: #007bff;
+  color: white;
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-  const keywordRatio = Math.round((count / totalKeywords) * 100);
-  keywordCoverageEl.textContent = isNaN(keywordRatio) ? "0%" : `${keywordRatio}%`;
+button:hover {
+  background-color: #0056b3;
+}
 
-  // Renkli durum gösterimi
-  if (keywordRatio >= 70) {
-    keywordStatusEl.textContent = "Harika!";
-    keywordStatusEl.className = "green";
-  } else if (keywordRatio >= 40) {
-    keywordStatusEl.textContent = "İyi ama geliştirilebilir.";
-    keywordStatusEl.className = "yellow";
-  } else {
-    keywordStatusEl.textContent = "Anahtar kelimeler eksik.";
-    keywordStatusEl.className = "red";
-  }
-});
+.output-section {
+  margin-top: 30px;
+}
+
+#metaOutput {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-top: 10px;
+  resize: none;
+}
+
+#feedback {
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+.good {
+  color: green;
+  font-weight: bold;
+}
+
+.warning {
+  color: orange;
+  font-weight: bold;
+}
+
+.bad {
+  color: red;
+  font-weight: bold;
+}
