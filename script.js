@@ -1,36 +1,31 @@
 function generateDescription() {
-  const input = document.getElementById("userInput").value.trim();
-  const keyword = document.getElementById("keyword").value.trim();
-  const output = document.getElementById("metaOutput");
-  const feedback = document.getElementById("feedback");
+  const input = document.getElementById('inputText').value.trim();
+  let description = input.slice(0, 160);
+  document.getElementById('output').innerText = description;
+  updateStatus(description.length);
+}
 
-  if (!input) {
-    output.value = "";
-    feedback.innerHTML = '<span class="bad">Lütfen açıklama girin.</span>';
-    return;
-  }
+function updateStatus(length) {
+  const countElem = document.getElementById('charCount');
+  const statusElem = document.getElementById('status');
 
-  let description = input;
+  countElem.innerText = `${length} karakter`;
 
-  // Karakter uzunluğu kontrolü
-  const length = description.length;
-  let lengthFeedback = "";
-  if (length >= 140 && length <= 160) {
-    lengthFeedback = '<span class="good">✅ Uzunluk ideal: ' + length + ' karakter</span>';
-  } else if (length < 140) {
-    lengthFeedback = '<span class="warning">⚠️ Kısa: ' + length + ' karakter (min 140 önerilir)</span>';
+  if (length < 50) {
+    statusElem.innerText = "Çok kısa";
+    statusElem.style.color = "orange";
+  } else if (length <= 160) {
+    statusElem.innerText = "İdeal uzunluk";
+    statusElem.style.color = "green";
   } else {
-    lengthFeedback = '<span class="warning">⚠️ Uzun: ' + length + ' karakter (maks. 160 önerilir)</span>';
+    statusElem.innerText = "Çok uzun";
+    statusElem.style.color = "red";
   }
+}
 
-  // Anahtar kelime içeriyor mu
-  let keywordFeedback = "";
-  if (keyword && description.toLowerCase().includes(keyword.toLowerCase())) {
-    keywordFeedback = '<span class="good">✅ Anahtar kelime içeriyor</span>';
-  } else {
-    keywordFeedback = '<span class="bad">❌ Anahtar kelime bulunamadı</span>';
-  }
-
-  output.value = description;
-  feedback.innerHTML = lengthFeedback + "<br>" + keywordFeedback;
+function copyToClipboard() {
+  const text = document.getElementById("output").innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Kopyalandı!");
+  });
 }
