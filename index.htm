@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Meta Description Generator</title>
-  <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>📝 Meta Description Generator</h1>
-    <p class="subtitle">SEO uyumlu açıklamalar oluşturun (ideal: 140–160 karakter)</p>
+    <h1>Meta Description Generator</h1>
 
-    <textarea id="descriptionInput" placeholder="Açıklamanızı buraya yazın..."></textarea>
-    
-    <p id="charCount">0 karakter</p>
-    
-    <button id="generateBtn">Açıklamayı Oluştur</button>
-    <button id="copyBtn" style="display:none;">Kopyala</button>
+    <label for="keywords">Anahtar Kelimeler (virgülle ayır):</label>
+    <input type="text" id="keywords" placeholder="örnek: SEO, meta açıklaması, Google" />
 
-    <div id="result" class="output-box" style="display:none;"></div>
+    <label for="content">İçeriğin Özeti veya Açıklama:</label>
+    <textarea id="content" placeholder="Buraya içerik özetini yazın..."></textarea>
+
+    <button id="generateBtn">Açıklama Oluştur</button>
+
+    <h2>Meta Açıklaması</h2>
+    <div id="resultBox">
+      <p id="result"></p>
+    </div>
+
+    <div id="feedback">
+      <p><strong>Karakter Sayısı:</strong> <span id="charCount">0</span></p>
+      <p><strong>Anahtar Kelime Kapsamı:</strong> <span id="keywordCoverage">0%</span></p>
+      <p><strong>Yoğunluk Durumu:</strong> <span id="keywordStatus"></span></p>
+    </div>
   </div>
 
   <script src="script.js"></script>
