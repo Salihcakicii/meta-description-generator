@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meta Description Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Meta Description Generator</h1>
+    
+    <div class="input-group">
+      <label for="keyword">Odak Anahtar Kelime</label>
+      <input type="text" id="keyword" placeholder="örnek: dijital pazarlama">
+    </div>
+
+    <div class="input-group">
+      <label for="userInput">Açıklama İçeriği</label>
+      <textarea id="userInput" rows="4" placeholder="İçerik hakkında kısa bir açıklama yazın..."></textarea>
+    </div>
+
+    <button onclick="generateDescription()">Oluştur</button>
+
+    <div class="output-section">
+      <h2>Meta Açıklaması</h2>
+      <textarea id="metaOutput" rows="3" readonly></textarea>
+      
+      <div id="feedback"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
