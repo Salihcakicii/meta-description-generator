@@ -10,24 +10,35 @@
   <div class="container">
     <h1>Meta Description Generator</h1>
 
-    <label>Dil Seç:</label>
+    <label for="keywordsInput">Anahtar Kelimeler (virgül veya yeni satır ile ayırın):</label>
+    <textarea id="keywordsInput" placeholder="örnek: SEO, backlink, içerik"></textarea>
+
+    <label for="brandInput">Marka Adı (opsiyonel):</label>
+    <input type="text" id="brandInput" placeholder="Marka adınızı yazın..." />
+
+    <button id="generateBtn">Meta Açıklama Oluştur</button>
+
+    <p id="lengthFeedback"></p>
+
+    <label for="descriptionOutput">Oluşturulan Meta Açıklama:</label>
+    <textarea id="descriptionOutput" readonly></textarea>
+
+    <div class="serp-preview">
+      <p class="serp-title">Başlık Örneği - www.siteadi.com</p>
+      <p class="serp-url">https://www.siteadi.com/ornek-sayfa</p>
+      <p class="serp-description" id="serpDescription">Meta açıklama burada gösterilecek...</p>
+    </div>
+
+    <div class="buttons">
+      <button id="copyBtn">📋 Kopyala</button>
+      <button id="downloadBtn">⬇️ İndir</button>
+    </div>
+
+    <label for="languageSelect">Dil:</label>
     <select id="languageSelect">
       <option value="tr">Türkçe</option>
       <option value="en">English</option>
     </select>
-
-    <label>Anahtar Kelime:</label>
-    <input type="text" id="keywordInput" placeholder="Anahtar kelimeyi girin..." />
-
-    <textarea id="descriptionInput" placeholder="Meta açıklamanızı buraya yazın..."></textarea>
-
-    <div class="info">
-      <p id="charCount">0 karakter</p>
-      <p id="pixelWidth">0 piksel</p>
-    </div>
-
-    <p id="feedback"></p>
-    <p id="keywordCheck"></p>
   </div>
 
   <script src="script.js"></script>
